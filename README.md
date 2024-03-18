@@ -5,7 +5,7 @@ A tui utility to save and restore setting profiles for games.
 ### Prerequisites
 - [Install Nix](https://nixos.org/download.html).
 - [Enable flakes](https://nixos.wiki/wiki/Flakes)
-- [(Optional) Install direnv](https://direnv.net/docs/installation.html)
+- [Install direnv](https://direnv.net/docs/installation.html)
 - You can also choose to manually run `nix develop` instead of using `direnv` to enter a shell with all the dependencies installed.
 
 ### Setup
