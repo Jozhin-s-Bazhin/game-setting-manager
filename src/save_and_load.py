@@ -1,27 +1,35 @@
 import argparse
 import os
+import shutil
+import json
 
 
 default_data_path = os.path.join(os.path.expanduser("~"), ".game_profile_data")
 
 def check_dir(dir):
-    """Check if a directory exists and create it if it doesn't"""
+    """Checks if a directory exists and creates it if it doesn't exist"""
     if not os.path.exists(dir):
         os.mkdir(dir)
 
-def save_profile(game, profile, paths, data_path):  # Save one or more config files to a profile to use later
-    """Save a list of files to the """
-    check_dir(data_path)
+def save_profile(game, profile, paths, data_path):  
+    """Saves a list of configuration files to a profile in the specified data directory"""
 
-    path_info = f"{data_path}/game_paths/{game}.json"  # This is where the data about the paths to all config files of a particular game is stored
-    check_dir(path_info)
+    # Check if there are any provided paths to game's files
+    if not (os.path.exists(data_path) and paths): 
+        raise ValueError(f"{data_path} has not been found and no paths were specified trough --path")
+
+    # 
+    path_info_file = f"{data_path}/game_paths/{game}.json"  # This is where the data about the paths to all config files of a particular game is stored
+    check_path(path_info_file)
+    check_dir(data_path)
         
-    with open(path_info, "w")
     if paths:  # Check if paths are specified, else try to find paths in data dir
         for path in paths:  # Check if all paths exist
             if not os.path.exists(path):
                 raise FileNotFoundError(f"{path} does not exist.")
     else:
+        with open(path_info_file, "r") as file:
+            paths = json.load(file)
 
 def load_profile(game, profile, data_path):  # Load profiles saved earlier
     pass
