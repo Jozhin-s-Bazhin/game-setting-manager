@@ -154,3 +154,9 @@ cython_debug/
 
 # Direnv cache
 .direnv/
+
+# VSCode settings
+.vscode/
+
+# Testing dir
+testing/

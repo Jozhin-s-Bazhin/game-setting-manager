@@ -13,6 +13,7 @@ def check_dir(dir):
         os.makedirs(dir, exist_ok=True)
         
 def encode_path(path):
+    """Takes in a path and returns a path with all '/' replaced with '%' and all '%' replaced with '%%'"""
     path = path.replace("%", "%%").replace("/", "%")
     return path
 
@@ -20,8 +21,8 @@ def save_profile(game, profile, paths, data_path):
     """Saves all files specified in 'paths' or read from '<data_path>/game_paths/<game>.json' to '<data_path>/<game>/<profile>/'"""
 
     # Check if there are any provided paths to game's files
-    if not (os.path.exists(data_path) or paths): 
-        raise ValueError(f"{data_path} has not been found and no paths were specified trough --path")
+    if not os.path.exists(data_path): 
+        raise ValueError(f"{data_path} has not been found")
 
     # Check and create file with path info an data directory
     check_dir(f"{data_path}/game_paths/")  # This is where all the data about config paths is stored
@@ -36,10 +37,11 @@ def save_profile(game, profile, paths, data_path):
             
         # Add path entries into the path list of the game
         if os.path.exists(config_file_path_info):
-            if input("Are you sure you want to overwrite your current path list? Enter 'yes' to proceed.").strip() != "yes":
+            if input("Are you sure you want to overwrite your current path list? Enter 'yes' to proceed.\n").strip() != "yes":
                 print("Exiting")
                 sys.exit()
         
+        absolute_paths = [os.path.abspath(path) for path in paths] # Convert all relative paths to absolute
         with open(config_file_path_info, "w") as file: 
             json.dump(paths, file)
     else:
@@ -79,3 +81,13 @@ parser_load.add_argument('game_name', help='Name of the game')
 parser_load.add_argument('profile_name', help='Name of the profile')
 # --path isn't needed because the game must be saved already anyway. If it isn't the program will throw an error
 parser_load.add_argument('--data-path', help='Path to saved data, mostly intended for testing', default=default_data_path)
+
+# Main function
+if __name__ == "__main__":
+    args = parser.parse_args()
+    if args.command == 'save':
+        save_profile(args.game_name, args.profile_name, args.path, args.data_path)
+    elif args.command == 'load':
+        load_profile(args.game_name, args.profile_name, args.data_path)
+    else:
+        parser.print_help()
