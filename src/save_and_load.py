@@ -10,7 +10,11 @@ default_data_path = os.path.join(os.path.expanduser("~"), ".game_profile_data")
 def check_dir(dir):
     """Checks if a directory exists and creates it if it doesn't exist"""
     if not os.path.exists(dir):
-        os.mkdirs(dir, exist_ok=True)
+        os.makedirs(dir, exist_ok=True)
+        
+def encode_path(path):
+    path = path.replace("%", "%%").replace("/", "%")
+    return path
 
 def save_profile(game, profile, paths, data_path):  
     """Saves all files specified in 'paths' or read from '<data_path>/game_paths/<game>.json' to '<data_path>/<game>/<profile>/'"""
@@ -31,8 +35,8 @@ def save_profile(game, profile, paths, data_path):
                 raise FileNotFoundError(f"{path} does not exist.")
             
         # Add path entries into the path list of the game
-        if os.file.exists(config_file_path_info):
-            if input("Are you sure you want to overwrite your current path list? Enter 'yes' to proceed.").strip() == "yes":
+        if os.path.exists(config_file_path_info):
+            if input("Are you sure you want to overwrite your current path list? Enter 'yes' to proceed.").strip() != "yes":
                 print("Exiting")
                 sys.exit()
         
@@ -46,7 +50,7 @@ def save_profile(game, profile, paths, data_path):
     profile_path = f"{data_path}/{game}/{profile}/"
     check_dir(profile_path)
     for path in paths:
-        shutil.copytree(path, profile_path)
+        shutil.copy(path, f"{profile_path}/{encode_path(path)}")
 
 def load_profile(game, profile, data_path):  
     """Loads all files from '<data_path>/<game>/<profile>/' to the appropriate locations read from '<data_path>/game_paths/<game>.json"""
@@ -56,11 +60,11 @@ def load_profile(game, profile, data_path):
         paths = json.load(file)
         
     for path in paths:
-        pass
+        shutil.copy(f"{data_path}/{game}/{profile}/{encode_path(path)}", path)
 
 # Create a parser to parse command-line arguments
 parser = argparse.ArgumentParser()
-parser.add_subparsers(dest="command")
+subparsers = parser.add_subparsers(dest="command")
 
 # Create a parser for the "save" command
 parser_save = subparsers.add_parser('save', help='Save game settings to a profile')
@@ -70,7 +74,7 @@ parser_save.add_argument('--path', nargs='+', help='Path to configuration files 
 parser_save.add_argument('--data-path', help='Path to saved data, mostly intended for testing', default=default_data_path)
 
 # Create a parser for the "load" command
-parser_load = subparsers.add_parser('save', help='Load game settings')
+parser_load = subparsers.add_parser('load', help='Load game settings')
 parser_load.add_argument('game_name', help='Name of the game')
 parser_load.add_argument('profile_name', help='Name of the profile')
 # --path isn't needed because the game must be saved already anyway. If it isn't the program will throw an error
