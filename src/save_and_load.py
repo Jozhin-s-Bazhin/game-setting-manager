@@ -3,19 +3,17 @@ import os
 import shutil
 import sys
 import json
+import hashlib
 
 
 default_data_path = os.path.join(os.path.expanduser("~"), ".game_profile_data")
 
-def check_dir(dir):
-    """Checks if a directory exists and creates it if it doesn't exist"""
-    if not os.path.exists(dir):
-        os.makedirs(dir, exist_ok=True)
-        
-def encode_path(path):
-    """Takes in a path and returns a path with all '/' replaced with '%' and all '%' replaced with '%%'"""
-    path = path.replace("%", "%%").replace("/", "%")
-    return path
+def hash_path(file_path):
+    """Takes a string and returns a hash. Used here to hash file paths"""
+    encoded_path = file_path.encode('utf-8')
+    hasher = hashlib.md5()
+    hasher.update(encoded_path)
+    return hasher.hexdigest()
 
 def save_profile(game, profile, paths, data_path):  
     """Saves all files specified in 'paths' or read from '<data_path>/game_paths/<game>.json' to '<data_path>/<game>/<profile>/'"""
@@ -25,7 +23,7 @@ def save_profile(game, profile, paths, data_path):
         raise ValueError(f"{data_path} has not been found")
 
     # Check and create file with path info an data directory
-    check_dir(f"{data_path}/game_paths/")  # This is where all the data about config paths is stored
+    os.makedirs(f"{data_path}/game_paths/", exist_ok=True)  # This is where all the data about config paths is stored
     
     # Check if paths are specified, else try to find paths in data dir
     config_file_path_info = f"{data_path}/game_paths/{game}.json"  # Path to file containing a list of all configuration files of the game
@@ -50,9 +48,9 @@ def save_profile(game, profile, paths, data_path):
             
     # Check the directory where saved profiles are stored and copy the games config files to it
     profile_path = f"{data_path}/{game}/{profile}/"
-    check_dir(profile_path)
+    os.makedirs(profile_path, exist_ok=True)
     for path in paths:
-        shutil.copy(path, f"{profile_path}/{encode_path(path)}")
+        shutil.copy(path, f"{profile_path}/{hash_path(path)}")
 
 def load_profile(game, profile, data_path):  
     """Loads all files from '<data_path>/<game>/<profile>/' to the appropriate locations read from '<data_path>/game_paths/<game>.json"""
@@ -62,7 +60,11 @@ def load_profile(game, profile, data_path):
         paths = json.load(file)
         
     for path in paths:
-        shutil.copy(f"{data_path}/{game}/{profile}/{encode_path(path)}", path)
+        saved_path = f"{data_path}/{game}/{profile}/{hash_path(path)}"
+        # Check if saved file exists
+        if not os.file.exists(saved_path):
+            raise FileNotFoundError(f"Saved path: '{saved_path}' not found.")
+        shutil.copy(, path)
 
 # Create a parser to parse command-line arguments
 parser = argparse.ArgumentParser()
