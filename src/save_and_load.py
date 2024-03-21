@@ -6,7 +6,7 @@ import json
 import hashlib
 
 
-default_data_path = os.path.join(os.path.expanduser("~"), ".game_profile_data")
+default_data_path = os.path.join(os.path.expanduser("~"), ".game_setting_manager")
 
 def hash_path(file_path):
     """Takes a string and returns a hash. Used here to hash file paths"""
@@ -78,7 +78,7 @@ parser_save.add_argument('--path', nargs='+', help='Path to configuration files 
 parser_save.add_argument('--data-path', help='Path to saved data, mostly intended for testing', default=default_data_path)
 
 # Create a parser for the "load" command
-parser_load = subparsers.add_parser('load', help='Load game settings')
+parser_load = subparsers.add_parser('load', help='Load game settings from a profile')
 parser_load.add_argument('game_name', help='Name of the game')
 parser_load.add_argument('profile_name', help='Name of the profile')
 # --path isn't needed because the game must be saved already anyway. If it isn't the program will throw an error
