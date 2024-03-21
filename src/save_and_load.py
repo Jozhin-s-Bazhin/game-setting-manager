@@ -62,9 +62,9 @@ def load_profile(game, profile, data_path):
     for path in paths:
         saved_path = f"{data_path}/{game}/{profile}/{hash_path(path)}"
         # Check if saved file exists
-        if not os.file.exists(saved_path):
+        if not os.path.exists(saved_path):
             raise FileNotFoundError(f"Saved path: '{saved_path}' not found.")
-        shutil.copy(, path)
+        shutil.copy(saved_path, path)
 
 # Create a parser to parse command-line arguments
 parser = argparse.ArgumentParser()
