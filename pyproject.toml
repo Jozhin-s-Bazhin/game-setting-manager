@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "game-setting-saver"
+name = "game-setting-manager"
 version = "0.1.0"
 description = ""
-authors = ["Roman Bezroutchko <rbezroutchko@gmail.com>"]
-license = ""
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.11.8"
+python = "^3.11"
 
 
 [build-system]
