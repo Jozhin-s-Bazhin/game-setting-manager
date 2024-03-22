@@ -17,6 +17,8 @@
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
             python3
+	    poetry
+	    python3Packages.pytest
           ];
         };
       });

@@ -5,10 +5,13 @@ description = ""
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [{include = "game_setting_manager", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 
+[tool.poetry.scripts]
+gsm = 'game_setting_manager.save_and_load:main'
 
 [build-system]
 requires = ["poetry-core"]

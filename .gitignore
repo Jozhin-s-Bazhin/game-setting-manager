@@ -158,5 +158,5 @@ cython_debug/
 # VSCode settings
 .vscode/
 
-# Testing dir
-testing/
+# dynamic testing dir
+tests/dynamic_testing_data/
