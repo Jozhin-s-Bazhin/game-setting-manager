@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    poetry2nix.url = "github:nix-community/poetry2nix";
   };
 
   outputs = { self, nixpkgs, flake-utils, ... }:
@@ -19,6 +20,7 @@
             python3
 	    poetry
 	    python3Packages.pytest
+	    poetry2nix.mkPoetryShell { projectDir = ./.; }
           ];
         };
       });
