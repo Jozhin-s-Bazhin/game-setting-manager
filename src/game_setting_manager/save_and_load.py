@@ -47,7 +47,7 @@ def save_profile(game, profile, paths, data_path):
             paths = json.load(file)
             
     # Check the directory where saved profiles are stored and copy the games config files to it
-    profile_path = f"{data_path}/{game}/{profile}/"
+    profile_path = f"{data_path}/saved_profiles/{game}/{profile}/"
     os.makedirs(profile_path, exist_ok=True)
     for path in paths:
         shutil.copy(path, f"{profile_path}/{hash_path(path)}")
@@ -60,7 +60,7 @@ def load_profile(game, profile, data_path):
         paths = json.load(file)
         
     for path in paths:
-        saved_path = f"{data_path}/{game}/{profile}/{hash_path(path)}"
+        saved_path = f"{data_path}/saved_profiles/{game}/{profile}/{hash_path(path)}"
         # Check if saved file exists
         if not os.path.exists(saved_path):
             raise FileNotFoundError(f"Saved path: '{saved_path}' not found.")
