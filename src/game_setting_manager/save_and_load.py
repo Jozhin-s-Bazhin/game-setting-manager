@@ -19,7 +19,7 @@ def save_profile(game, profile, paths, data_path):
     """Saves all files specified in 'paths' or read from '<data_path>/game_paths/<game>.json' to '<data_path>/<game>/<profile>/'"""
 
     # Check if there are any provided paths to game's files
-    if not os.path.exists(data_path): 
+    if (not os.path.exists(data_path) and not paths): 
         raise ValueError(f"{data_path} has not been found")
 
     # Check and create file with path info an data directory
