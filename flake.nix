@@ -9,7 +9,6 @@
   outputs = { self, nixpkgs, flake-utils, poetry2nix, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # Apply the poetry2nix overlay here
         pkgs = import nixpkgs {
           inherit system;
         };
