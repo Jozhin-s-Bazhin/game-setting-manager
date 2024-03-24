@@ -1,6 +1,13 @@
 import shutil
 import os
 
+CONFIG_FILE_CONTENT = "I am a config file for game_1. I use profile_1"
+NESTED_CONFIG_FILE_CONTENT = "I am a nested config file for game_1. I use profile_1"
+
+def get_file_content(path):
+    with open(path) as file:
+        content = file.read()
+    return content
 
 def create_test_env(path, data_dir_status, game_amount):
     """
@@ -21,7 +28,7 @@ def create_test_env(path, data_dir_status, game_amount):
     elif data_dir_status == "no_data_dir":
         pass 
     else:
-        shutil.copy(data_dir_status, f"{path}/data/")
+        shutil.copytree(data_dir_status, f"{path}/data/")
         
     # Create games
     for i in range(1, game_amount+1):

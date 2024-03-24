@@ -6,7 +6,7 @@ import json
 import hashlib
 
 
-default_data_path = os.path.join(os.path.expanduser("~"), ".game_setting_manager")
+DEFAULT_DATA_PATH = os.path.join(os.path.expanduser("~"), ".game_setting_manager")
 
 def hash_path(file_path):
     """Takes a string and returns a hash. Used here to hash file paths"""
@@ -15,7 +15,7 @@ def hash_path(file_path):
     hasher.update(encoded_path)
     return hasher.hexdigest()
 
-def save_profile(game, profile, paths, data_path):  
+def save_profile(game, profile, paths, data_path, overwrite):  
     """Saves all files specified in 'paths' or read from '<data_path>/game_paths/<game>.json' to '<data_path>/<game>/<profile>/'"""
 
     # Check if there are any provided paths to game's files
@@ -33,12 +33,17 @@ def save_profile(game, profile, paths, data_path):
             if not os.path.exists(path):
                 raise FileNotFoundError(f"{path} does not exist.")
             
-        # Add path entries into the path list of the game
+        # Check if saved profiles need to be overwritten
         if os.path.exists(config_file_path_info):
-            if input("Are you sure you want to overwrite your current path list? Enter 'yes' to proceed.\n").strip() != "yes":
-                print("Exiting")
+            if not overwrite:
+                print("Saved profiles found. Use '--overwrite-saved-profiles true' to overwrite")
                 sys.exit()
+            elif overwrite == "ask":
+                if not input("Are you sure you want to overwrite already saved profiles? Enter 'yes' to proceed.").strip().lower() == 'yes':
+                    print("Exiting")
+                    sys.exit()
         
+        # Add paths to data
         absolute_paths = [os.path.abspath(path) for path in paths] # Convert all relative paths to absolute
         with open(config_file_path_info, "w") as file: 
             json.dump(paths, file)
@@ -75,20 +80,21 @@ parser_save = subparsers.add_parser('save', help='Save game settings to a profil
 parser_save.add_argument('game_name', help='Name of the game')
 parser_save.add_argument('profile_name', help='Name of the profile') 
 parser_save.add_argument('--path', nargs='+', help='Path to configuration files of the game', default=None)  # Use "--path /path/to/config/file" if the path of the game isn't saved already
-parser_save.add_argument('--data-path', help='Path to saved data, mostly intended for testing', default=default_data_path)
+parser_save.add_argument('--data-path', help='Path to saved data, mostly intended for testing', default=DEFAULT_DATA_PATH)
+parser_save.add_argument('--overwrite-saved-profiles', help='Whether to overwrite saved profiles if they already exist', default='ask')
 
 # Create a parser for the "load" command
 parser_load = subparsers.add_parser('load', help='Load game settings from a profile')
 parser_load.add_argument('game_name', help='Name of the game')
 parser_load.add_argument('profile_name', help='Name of the profile')
 # --path isn't needed because the game must be saved already anyway. If it isn't the program will throw an error
-parser_load.add_argument('--data-path', help='Path to saved data, mostly intended for testing', default=default_data_path)
+parser_load.add_argument('--data-path', help='Path to saved data, mostly intended for testing', default=DEFAULT_DATA_PATH)
 
 # Main function
 def main():
     args = parser.parse_args()
     if args.command == 'save':
-        save_profile(args.game_name, args.profile_name, args.path, args.data_path)
+        save_profile(args.game_name, args.profile_name, args.path, args.data_path, args.overwrite_saved_profiles)
     elif args.command == 'load':
         load_profile(args.game_name, args.profile_name, args.data_path)
     else:
