@@ -1,5 +1,4 @@
 import pytest
-import shutil
 from testing_tools import get_file_content, config_file_content, create_test_env
 from save_and_load import save_profile, hash_path
 
