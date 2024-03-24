@@ -1,8 +1,6 @@
 import shutil
 import os
-
-CONFIG_FILE_CONTENT = "I am a config file for game_1. I use profile_1"
-NESTED_CONFIG_FILE_CONTENT = "I am a nested config file for game_1. I use profile_1"
+import random
 
 def config_file_content(game, nested=False, profile='profile_1'):
     content = f"I am a {'nested ' if nested else ''}config file for {game}. I use {profile}"
@@ -20,19 +18,14 @@ def create_test_env(path, data_dir_status, game_amount):
     specific test.
     Parameters:
     - data_dir_status (str): whether the data directory doesn't 
-    exist ("no_data_dir"), exists but is empty ("empty_data_dir")
-    or has a certain content ("{path to contents}").
+    exist ("no_data_dir") or exists but is empty ("empty_data_dir").
     - game_amount (int): amount of test games
     """
     
     # Create data directory
-    if data_dir_status == "empty_data_dir":
+    if data_dir_status == "empty_data_dir":  # Yes I know I should use booleans, this had more options before and I don't want to go trough everything
         os.makedirs(f"{path}/data/game_paths", exist_ok=True) 
         os.makedirs(f"{path}/data/saved_profiles", exist_ok=True)
-    elif data_dir_status == "no_data_dir":
-        pass 
-    else:
-        shutil.copytree(data_dir_status, f"{path}/data/")
         
     # Create games
     for i in range(1, game_amount+1):
@@ -68,3 +61,26 @@ def create_test_env(path, data_dir_status, game_amount):
        
     This would be achieved with the arguments data_dir_status='empty_data_dir' and game_amount=1
     """
+
+# def modify_test_env(path, changes):
+#     """
+#     Modifies a test environment with the path 'path' and applies changes described in 'changes'.
+#     'changes' should be a dictionary with paths as keys and file contents (strings) as values. If 
+#     a value is a dictionary it will be considered a directory and all files inside it will be 
+#     created and the contents will be applied as described above. Already existing files will not 
+#     be removed.
+#     """
+#
+#     for name in changes.keys():
+#         if isinstance(name, str):
+#             with open(f"{path}/{name}", "w") as file:
+#                 file.write(changes[name])
+#         elif isinstance(name, dict):
+#             modify_test_env(f"{path}/{name}", changes[name])
+
+def corrupt_file(path):
+    """Puts random content into a given file. Used to test 'load_profile'"""
+    with open(path, "w") as file:
+        for i in range(100):
+            char = chr(random.randint(32, 126))
+            file.write(char)
