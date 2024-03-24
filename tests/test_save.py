@@ -22,11 +22,20 @@ def test_save_with_multiple_games(tmp_path):
 def test_save_multiple_files(tmp_path):
     """Tests whether you can save multiple files for a single profile with one game present and all data directories already created"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)  # Create testing environment with one game and an empty data directory
+    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file", f"{tmp_path}/game_1/another_config_file"], f"{tmp_path}/data", False)  # Run function
+
+    file_content = testing_tools.get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
+    another_file_content = testing_tools.get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/another_config_file')}")
+    assert file_content == testing_tools.config_file_content("game_1") and another_file_content == testing_tools.config_file_content("game_1", extra="another")
+    
+def test_save_multiple_files_with_identical_names(tmp_path):
+    """Tests whether you can save multiple files with identical names for a single profile with one game present and all data directories already created"""
+    testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)  # Create testing environment with one game and an empty data directory
     save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file", f"{tmp_path}/game_1/config_dir/config_file"], f"{tmp_path}/data", False)  # Run function
 
     file_content = testing_tools.get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
     nested_file_content = testing_tools.get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_dir/config_file')}")
-    assert file_content == testing_tools.config_file_content("game_1") and nested_file_content == testing_tools.config_file_content("game_1", nested=True)
+    assert file_content == testing_tools.config_file_content("game_1") and nested_file_content == testing_tools.config_file_content("game_1", extra="nested")
    
 def test_save_no_data_dir(tmp_path):
     """Tests whether you can save a single profile with one game present and no data directories created"""

@@ -2,8 +2,8 @@ import shutil
 import os
 import random
 
-def config_file_content(game, nested=False, profile='profile_1'):
-    content = f"I am a {'nested ' if nested else ''}config file for {game}. I use {profile}"
+def config_file_content(game, profile='profile_1', extra="None"):
+    content = f"I am a config file for {game}. I use {profile}. Extra info: {extra}"
     return content
 
 def get_file_content(path):
@@ -23,7 +23,7 @@ def create_test_env(path, data_dir_status, game_amount):
     """
     
     # Create data directory
-    if data_dir_status == "empty_data_dir":  # Yes I know I should use booleans, this had more options before and I don't want to go trough everything
+    if data_dir_status == "empty_data_dir":  # Yes I know I should use booleans, this had more options before and I don't want to go trough all my tests and change it
         os.makedirs(f"{path}/data/game_paths", exist_ok=True) 
         os.makedirs(f"{path}/data/saved_profiles", exist_ok=True)
         
@@ -44,9 +44,11 @@ def create_test_env(path, data_dir_status, game_amount):
             
         # Put some stuff into config files
         with open(f"{path}/{game}/config_dir/config_file", "w") as nested_config_file:
-            nested_config_file.write(config_file_content(game, nested=True))
+            nested_config_file.write(config_file_content(game, extra="nested"))
         with open(f"{path}/{game}/config_file", "w") as config_file:
             config_file.write(config_file_content(game))
+        with open(f"{path}/{game}/another_config_file", "w") as another_config_file:
+            another_config_file.write(config_file_content(game, extra="another"))
             
     """
     The final structure may look something like this:
@@ -55,6 +57,7 @@ def create_test_env(path, data_dir_status, game_amount):
        |- config_dir/
           |- config_file
        |- config_file
+       |- another_config_file
     |- data/
        |- game_paths
        |- saved_profiles
