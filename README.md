@@ -1,5 +1,5 @@
 # game-setting-saver
-An egregiously overengeneered tui utility to manage game settings written in Python.
+An overengineered cli and tui utility to save and restore setting profiles for games. 
 
 ## Installation for dev environment
 ### Prerequisites
