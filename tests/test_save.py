@@ -1,6 +1,6 @@
 import pytest
 import shutil
-from testing_tools import get_file_content, CONFIG_FILE_CONTENT, NESTED_CONFIG_FILE_CONTENT, create_test_env
+from testing_tools import get_file_content, config_file_content, create_test_env
 from save_and_load import save_profile, hash_path
 
 
@@ -10,7 +10,7 @@ def test_save(tmp_path):
     save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data", False)  
     
     file_content = get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
-    assert file_content == CONFIG_FILE_CONTENT
+    assert file_content == config_file_content("game_1")
     
 def test_save_with_multiple_games(tmp_path):
     """Tests whether you can save a single profile with multiple games present and all data directories already created"""
@@ -18,7 +18,7 @@ def test_save_with_multiple_games(tmp_path):
     save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data", False) 
     
     file_content = get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
-    assert file_content == CONFIG_FILE_CONTENT
+    assert file_content == config_file_content("game_1")
     
 def test_save_multiple_files(tmp_path):
     """Tests whether you can save multiple files for a single profile with one game present and all data directories already created"""
@@ -27,7 +27,7 @@ def test_save_multiple_files(tmp_path):
 
     file_content = get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
     nested_file_content = get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_dir/config_file')}")
-    assert file_content == CONFIG_FILE_CONTENT and nested_file_content == NESTED_CONFIG_FILE_CONTENT
+    assert file_content == config_file_content("game_1") and nested_file_content == config_file_content("game_1", nested=True)
    
 def test_no_data_dir(tmp_path):
     """Tests whether you can save a single profile with one game present and no data directories created"""
@@ -35,7 +35,7 @@ def test_no_data_dir(tmp_path):
     save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data", False)  
     
     file_content = get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
-    assert file_content == CONFIG_FILE_CONTENT
+    assert file_content == config_file_content("game_1")
     
 def test_full_data_dir(tmp_path):
     """Tests whether you can save a single profile with one game present and a saved profile and path data already present in the data directory"""
@@ -44,4 +44,14 @@ def test_full_data_dir(tmp_path):
     save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data", True)  # Run function to test it
 
     file_content = get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
-    assert file_content == CONFIG_FILE_CONTENT
+    assert file_content == config_file_content("game_1")
+    
+def test_save_multiple_games(tmp_path):
+    """Tests whether you can save multiple profiles for multiple games with an empty data directory"""
+    create_test_env(tmp_path, "empty_data_dir", 2)
+    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data", False)
+    save_profile("game_2", "profile_1", [f"{tmp_path}/game_2/config_file"], f"{tmp_path}/data", False)
+    
+    game_1_file_content = get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
+    game_2_file_content = get_file_content(f"{tmp_path}/data/saved_profiles/game_2/profile_1/{hash_path(f'{tmp_path}/game_2/config_file')}")
+    assert game_1_file_content == config_file_content("game_1") and game_2_file_content == config_file_content("game_2")

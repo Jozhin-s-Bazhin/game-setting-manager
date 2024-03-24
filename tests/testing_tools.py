@@ -4,6 +4,10 @@ import os
 CONFIG_FILE_CONTENT = "I am a config file for game_1. I use profile_1"
 NESTED_CONFIG_FILE_CONTENT = "I am a nested config file for game_1. I use profile_1"
 
+def config_file_content(game, nested=False, profile='profile_1'):
+    content = f"I am a {'nested ' if nested else ''}config file for {game}. I use {profile}"
+    return content
+
 def get_file_content(path):
     with open(path) as file:
         content = file.read()
@@ -47,9 +51,9 @@ def create_test_env(path, data_dir_status, game_amount):
             
         # Put some stuff into config files
         with open(f"{path}/{game}/config_dir/config_file", "w") as nested_config_file:
-            nested_config_file.write(f"I am a nested config file for {game}. I use profile_1")
+            nested_config_file.write(config_file_content(game, nested=True))
         with open(f"{path}/{game}/config_file", "w") as config_file:
-            config_file.write(f"I am a config file for {game}. I use profile_1")
+            config_file.write(config_file_content(game))
             
     """
     The final structure may look something like this:
