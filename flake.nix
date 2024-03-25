@@ -22,9 +22,8 @@
           ];
 
           shellHook = ''
-            export PATH=${pkgs.poetry}/bin:$PATH
-	    poetry install
-	    source "$(poetry env info --path)/bin/activate"
+	          poetry install
+	          source "$(poetry env info --path)/bin/activate"
           '';
         };
       }

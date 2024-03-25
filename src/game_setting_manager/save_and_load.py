@@ -17,16 +17,16 @@ def hash_path(file_path):
 
 def save_profile(game, profile, paths, data_path, overwrite):  
     """Saves all files specified in 'paths' or read from '<data_path>/game_paths/<game>.json' to '<data_path>/<game>/<profile>/'"""
+    config_file_path_info = f"{data_path}/game_paths/{game}.json"
 
     # Check if there are any provided paths to game's files
-    if (not os.path.exists(data_path) and not paths): 
-        raise ValueError(f"{data_path} has not been found. Please specify a path to your game's configuration files trough --path")
+    if (not os.path.exists(config_file_path_info) and not paths): 
+        raise FileNotFoundError(f"No saved paths were found at '{config_file_path_info}' and no paths were specified trough --path")
 
     # Check and create file with path info an data directory
     os.makedirs(f"{data_path}/game_paths/", exist_ok=True)  # This is where all the data about config paths is stored
     
     # Check if paths are specified, else try to find paths in data dir
-    config_file_path_info = f"{data_path}/game_paths/{game}.json"  # Path to file containing a list of all configuration files of the game
     if paths:  
         # Check if all paths exist
         for path in paths: 
