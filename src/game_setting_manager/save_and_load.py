@@ -89,6 +89,7 @@ parser_load.add_argument('game_name', help='Name of the game')
 parser_load.add_argument('profile_name', help='Name of the profile')
 # --path isn't needed because the game must be saved already anyway. If it isn't the program will throw an error
 parser_load.add_argument('--data-path', help='Path to saved data, mostly intended for testing', default=DEFAULT_DATA_PATH)
+# --overwrite-saved-profiles isn't needed either because this doesn't modify the data directory in any way
 
 # Main function
 def main():
