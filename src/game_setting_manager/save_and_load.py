@@ -20,7 +20,7 @@ def save_profile(game, profile, paths, data_path, overwrite):
 
     # Check if there are any provided paths to game's files
     if (not os.path.exists(data_path) and not paths): 
-        raise ValueError(f"{data_path} has not been found")
+        raise ValueError(f"{data_path} has not been found. Please specify a path to your game's configuration files trough --path")
 
     # Check and create file with path info an data directory
     os.makedirs(f"{data_path}/game_paths/", exist_ok=True)  # This is where all the data about config paths is stored
