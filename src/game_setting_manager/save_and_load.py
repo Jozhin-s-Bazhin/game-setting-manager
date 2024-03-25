@@ -50,6 +50,8 @@ def save_profile(game, profile, paths, data_path, overwrite):
     else:
         with open(config_file_path_info, "r") as file:
             paths = json.load(file)
+        if not paths:
+            raise ValueError(f"No saved paths were found at {config_file_path_info}")
             
     # Check the directory where saved profiles are stored and copy the games config files to it
     profile_path = f"{data_path}/saved_profiles/{game}/{profile}/"

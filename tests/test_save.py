@@ -1,8 +1,10 @@
 import pytest
 import testing_tools
+import os
 from save_and_load import save_profile, hash_path
 
 
+# Tests that should work
 def test_save(tmp_path):
     """Tests whether you can save a single profile with one game present and all data directories already created"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)  # Create testing environment with one game and an empty data directory
@@ -63,3 +65,50 @@ def test_save_multiple_games(tmp_path):
     game_1_file_content = testing_tools.get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
     game_2_file_content = testing_tools.get_file_content(f"{tmp_path}/data/saved_profiles/game_2/profile_1/{hash_path(f'{tmp_path}/game_2/config_file')}")
     assert game_1_file_content == testing_tools.config_file_content("game_1") and game_2_file_content == testing_tools.config_file_content("game_2")
+    
+# Tests that should trigger an error
+NO_PATHS_SPECIFIED_ERROR = "No saved paths were found at"  # The error will be different each time but should always contain this
+
+def test_no_saved_game(tmp_path):
+    """Tests whether trying to save a game without the data directory and no path specified will trigger the correct error."""
+    testing_tools.create_test_env(tmp_path, "no_data_dir", 1)
+    with pytest.raises(FileNotFoundError) as exception_info:
+        save_profile("game_1", "profile_1", [], f"{tmp_path}/data", False)
+    
+    assert NO_PATHS_SPECIFIED_ERROR in str(exception_info.value)  
+    
+def test_no_saved_game_empty_data_dir(tmp_path):
+    """Tests whether trying to save a game with an empty data directory and no path specified will trigger the correct error"""
+    testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
+    with pytest.raises(FileNotFoundError) as exception_info:
+        save_profile("game_1", "profile_1", [], f"{tmp_path}/data", False)
+    
+    assert NO_PATHS_SPECIFIED_ERROR in str(exception_info.value)
+    
+def test_no_saved_game_empty_list_in_path_file(tmp_path):
+    """Tests whether trying to save a game with an empty list in the path file in the data_dir and no path specified will trigger the correct error"""
+    testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
+
+    # Put empty list into path file
+    with open(f"{tmp_path}/data/game_paths/game_1.json", "w") as file:
+        file.write("[]")
+        
+    # The test itself
+    with pytest.raises(ValueError) as exception_info:
+        save_profile("game_1", "profile_1", [], f"{tmp_path}/data", False)
+    
+    assert NO_PATHS_SPECIFIED_ERROR in str(exception_info.value)
+    
+def test_no_saved_game_empty_path_file(tmp_path):
+    """Tests whether trying to save a game with an empty path file in the data_dir and no path specified will trigger the correct error"""
+    testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
+
+    # Put empty list into path file
+    with open(f"{tmp_path}/data/game_paths/game_1.json", "w") as file:
+        file.write("")
+        
+    # The test itself
+    with pytest.raises(ValueError) as exception_info:
+        save_profile("game_1", "profile_1", [], f"{tmp_path}/data", False)
+    
+    assert NO_PATHS_SPECIFIED_ERROR in str(exception_info.value)
