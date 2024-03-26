@@ -106,9 +106,9 @@ def test_no_saved_game_empty_path_file(tmp_path):
     # Put empty list into path file
     with open(f"{tmp_path}/data/game_paths/game_1.json", "w") as file:
         file.write("")
-        
+       
     # The test itself
     with pytest.raises(ValueError) as exception_info:
         save_profile("game_1", "profile_1", [], f"{tmp_path}/data", False)
-    
-    assert NO_PATHS_SPECIFIED_ERROR in str(exception_info.value)
+   
+    assert "does not contain valid JSON" in str(exception_info.value)
