@@ -69,7 +69,7 @@ def test_save_multiple_games(tmp_path):
 # Tests that should trigger an error
 NO_PATHS_SPECIFIED_ERROR = "No saved paths were found at"  # The error will be different each time but should always contain this
 
-def test_no_saved_game(tmp_path):
+def test_save_no_saved_game(tmp_path):
     """Tests whether trying to save a game without the data directory and no path specified will trigger the correct error."""
     testing_tools.create_test_env(tmp_path, "no_data_dir", 1)
     with pytest.raises(FileNotFoundError) as exception_info:
@@ -77,7 +77,7 @@ def test_no_saved_game(tmp_path):
     
     assert NO_PATHS_SPECIFIED_ERROR in str(exception_info.value)  
     
-def test_no_saved_game_empty_data_dir(tmp_path):
+def test_save_no_saved_game_empty_data_dir(tmp_path):
     """Tests whether trying to save a game with an empty data directory and no path specified will trigger the correct error"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
     with pytest.raises(FileNotFoundError) as exception_info:
@@ -85,7 +85,7 @@ def test_no_saved_game_empty_data_dir(tmp_path):
     
     assert NO_PATHS_SPECIFIED_ERROR in str(exception_info.value)
     
-def test_no_saved_game_empty_list_in_path_file(tmp_path):
+def test_save_no_saved_game_empty_list_in_path_file(tmp_path):
     """Tests whether trying to save a game with an empty list in the path file in the data_dir and no path specified will trigger the correct error"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
 
@@ -99,11 +99,13 @@ def test_no_saved_game_empty_list_in_path_file(tmp_path):
     
     assert NO_PATHS_SPECIFIED_ERROR in str(exception_info.value)
     
-def test_no_saved_game_empty_path_file(tmp_path):
+def test_save_no_saved_game_empty_path_file(tmp_path):
     """Tests whether trying to save a game with an empty path file in the data_dir and no path specified will trigger the correct error"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
 
     # Put empty list into path file
+    with open(f"{tmp_path}/data/game_paths/game_1.json", "w") as file:
+        file.write    # Put empty list into path file
     with open(f"{tmp_path}/data/game_paths/game_1.json", "w") as file:
         file.write("")
        
@@ -112,8 +114,14 @@ def test_no_saved_game_empty_path_file(tmp_path):
         save_profile("game_1", "profile_1", [], f"{tmp_path}/data", False)
    
     assert "does not contain valid JSON" in str(exception_info.value)
+       
+    # The test itself
+    with pytest.raises(ValueError) as exception_info:
+        save_profile("game_1", "profile_1", [], f"{tmp_path}/data", False)
+   
+    assert "does not contain valid JSON" in str(exception_info.value)
     
-def test_corrupted_path_file(tmp_path):
+def test_save_corrupted_path_file(tmp_path):
     """Tests whether trying to save a game with a corrupted path file in the data_dir and no path specified will trigger the correct error"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
 

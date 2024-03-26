@@ -47,3 +47,13 @@ def test_load_with_multiple_files_with_identical_names(tmp_path):
     nested_file_content = testing_tools.get_file_content(f"{tmp_path}/game_1/config_dir/config_file")
     assert file_content == testing_tools.config_file_content("game_1") and nested_file_content == testing_tools.config_file_content("game_1", extra="nested")
  
+# test_load_no_data_dir()
+# load_multiple_games()
+
+# tests that should trigger an error
+
+# test_no_saved_game
+# test_no_saved_game_empty_data_dir
+# test_no_saved_game_empty_list_in_path_file
+# test_no_saved_game_empty_path_file
+# test_no_saved_game_corrupted_path_file
