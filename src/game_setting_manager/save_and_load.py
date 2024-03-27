@@ -68,8 +68,14 @@ def load_profile(game, profile, data_path):
     """Loads all files from '<data_path>/<game>/<profile>/' to the appropriate locations read from '<data_path>/game_paths/<game>.json"""
     config_file_path_info = f"{data_path}/game_paths/{game}.json"  # Path to file containing a list of all configuration files of the game
 
-    with open(config_file_path_info, "r") as file:
-        paths = json.load(file)
+    try:
+        with open(config_file_path_info, "r") as file:
+            paths = json.load(file)
+    except:
+        raise DataError("File containing paths to the game's configuration files was not found or does not contain valid JSON")
+    
+    if not paths or not isinstance(paths, list):
+        raise DataError("The file containing paths to the game's configuration files does not contain a list or contains an empty list")
         
     for path in paths:
         saved_path = f"{data_path}/saved_profiles/{game}/{profile}/{hash_path(path)}"

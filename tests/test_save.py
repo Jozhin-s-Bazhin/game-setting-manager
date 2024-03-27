@@ -38,7 +38,15 @@ def test_save_multiple_files_with_identical_names(tmp_path):
     file_content = testing_tools.get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
     nested_file_content = testing_tools.get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_dir/config_file')}")
     assert file_content == testing_tools.config_file_content("game_1") and nested_file_content == testing_tools.config_file_content("game_1", extra="nested")
-   
+
+def test_save_empty_data_dir(tmp_path):
+    """Tests whether you can save a single profile with one game present and empty data directories created"""
+    testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)  # Create testing environment with one game and an empty data directory
+    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data")  
+    
+    file_content = testing_tools.get_file_content(f"{tmp_path}/data/saved_profiles/game_1/profile_1/{hash_path(f'{tmp_path}/game_1/config_file')}")
+    assert file_content == testing_tools.config_file_content("game_1")
+    
 def test_save_no_data_dir(tmp_path):
     """Tests whether you can save a single profile with one game present and no data directories created"""
     testing_tools.create_test_env(tmp_path, "no_data_dir", 1)  # Create testing environment with one game and an empty data directory
