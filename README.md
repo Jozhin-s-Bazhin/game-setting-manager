@@ -1,4 +1,4 @@
-# game-setting-saver
+# game-setting-manager
 An overengeneered cli and tui utility to save and restore setting profiles for games. 
 
 ## Installation for dev environment
@@ -10,7 +10,7 @@ An overengeneered cli and tui utility to save and restore setting profiles for g
 
 ### Setup
 ```
-git clone git@github.com:Jozhin-s-Bazhin/game-setting-saver.git
-cd game-setting-saver
+git clone git@github.com:Jozhin-s-Bazhin/game-setting-manager.git
+cd game-setting-manager
 direnv allow  # Allow direnv to load project environment. Remove this when using nix develop.
 ```
