@@ -114,13 +114,7 @@ def test_save_no_saved_game_empty_path_file(tmp_path):
         save_profile("game_1", "profile_1", [], f"{tmp_path}/data", False)
    
     assert "does not contain valid JSON" in str(exception_info.value)
-       
-    # The test itself
-    with pytest.raises(ValueError) as exception_info:
-        save_profile("game_1", "profile_1", [], f"{tmp_path}/data", False)
-   
-    assert "does not contain valid JSON" in str(exception_info.value)
-    
+
 def test_save_corrupted_path_file(tmp_path):
     """Tests whether trying to save a game with a corrupted path file in the data_dir and no path specified will trigger the correct error"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
