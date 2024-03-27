@@ -11,7 +11,7 @@ packages = [{include = "game_setting_manager", from = "src"}]
 python = "^3.11"
 
 [tool.poetry.scripts]
-gsm = 'game_setting_manager.save_and_load:main'
+gsm-cli = 'game_setting_manager.gsm_cli:main'
 
 [build-system]
 requires = ["poetry-core"]
