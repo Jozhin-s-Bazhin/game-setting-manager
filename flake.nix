@@ -1,5 +1,5 @@
 {
-  description = "A minimal Python environment with direnv integration";
+  description = "A cli and tui utility to save and restore profiles for games";
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
