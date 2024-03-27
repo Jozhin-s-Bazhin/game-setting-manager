@@ -6,7 +6,7 @@ from save_and_load import save_profile, load_profile, hash_path
 def test_load(tmp_path):
     """Test loading a profile from a single file with one game present"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
-    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data", False)  # I didn't find any other way to save data
+    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data")  # I didn't find any other way to save data
     testing_tools.corrupt_file(f"{tmp_path}/game_1/config_file")
     load_profile("game_1", "profile_1", f"{tmp_path}/data")
     
@@ -16,7 +16,7 @@ def test_load(tmp_path):
 def test_load_with_multipe_games(tmp_path):
     """Test loading a profile from a single file with multiple games present"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 3)
-    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data", False) 
+    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data") 
     testing_tools.corrupt_file(f"{tmp_path}/game_1/config_file")
     load_profile("game_1", "profile_1", f"{tmp_path}/data")
 
@@ -26,7 +26,7 @@ def test_load_with_multipe_games(tmp_path):
 def test_load_multiple_files(tmp_path):
     """Test loading a profile from multiple files with one game present"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
-    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file", f"{tmp_path}/game_1/another_config_file"], f"{tmp_path}/data", False)  
+    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file", f"{tmp_path}/game_1/another_config_file"], f"{tmp_path}/data")  
     testing_tools.corrupt_file(f"{tmp_path}/game_1/config_file")
     testing_tools.corrupt_file(f"{tmp_path}/game_1/another_config_file")
     load_profile("game_1", "profile_1", f"{tmp_path}/data")
@@ -38,7 +38,7 @@ def test_load_multiple_files(tmp_path):
 def test_load_with_multiple_files_with_identical_names(tmp_path):
     """Test loading a profile from multiple files with identical names with one game present"""
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 1)
-    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file", f"{tmp_path}/game_1/config_dir/config_file"], f"{tmp_path}/data", False)  
+    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file", f"{tmp_path}/game_1/config_dir/config_file"], f"{tmp_path}/data")
     testing_tools.corrupt_file(f"{tmp_path}/game_1/config_file")
     testing_tools.corrupt_file(f"{tmp_path}/game_1/config_dir/config_file")
     load_profile("game_1", "profile_1", f"{tmp_path}/data")
@@ -52,8 +52,8 @@ def load_multiple_games(tmp_path):
     testing_tools.create_test_env(tmp_path, "empty_data_dir", 2)
     
     # Save profiles
-    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data", False)
-    save_profile("game_2", "profile_1", [f"{tmp_path}/game_2/config_file"], f"{tmp_path}/data", False)
+    save_profile("game_1", "profile_1", [f"{tmp_path}/game_1/config_file"], f"{tmp_path}/data")
+    save_profile("game_2", "profile_1", [f"{tmp_path}/game_2/config_file"], f"{tmp_path}/data")
     
     # Corrupt original files
     testing_tools.corrupt_file(f"{tmp_path}/game_1/config_file")

@@ -25,13 +25,13 @@ def hash_path(file_path):
     hasher.update(encoded_path)
     return hasher.hexdigest()
 
-def save_profile(game, profile, paths, data_path, overwrite):  
+def save_profile(game, profile, paths, data_path):  
     """Saves all files specified in 'paths' or read from '<data_path>/game_paths/<game>.json' to '<data_path>/<game>/<profile>/'"""
     config_file_path_info = f"{data_path}/game_paths/{game}.json"
 
     # Check if there are any provided paths to game's files
     if (not os.path.exists(config_file_path_info) and not paths): 
-        raise FileNotFoundError(f"No saved paths were found at '{config_file_path_info}' and no paths were specified trough --path")
+        raise PathError(f"No saved paths were found at '{config_file_path_info}' and no paths were specified trough --path.")
 
     # Check and create file with path info an data directory
     os.makedirs(f"{data_path}/game_paths/", exist_ok=True)  # This is where all the data about config paths is stored
@@ -41,18 +41,8 @@ def save_profile(game, profile, paths, data_path, overwrite):
         # Check if all paths exist
         for path in paths: 
             if not os.path.exists(path):
-                raise FileNotFoundError(f"{path} does not exist.")
+                raise PathError(f"{path} does not exist.")
             
-        # Check if saved profiles need to be overwritten
-        if os.path.exists(config_file_path_info):
-            if not overwrite:
-                print("Saved profiles found. Use '--overwrite-saved-profiles true' to overwrite")
-                sys.exit()
-            elif overwrite == "ask":
-                if not input("Are you sure you want to overwrite already saved profiles? Enter 'yes' to proceed.").strip().lower() == 'yes':
-                    print("Exiting")
-                    sys.exit()
-        
         # Add paths to data
         absolute_paths = [os.path.abspath(path) for path in paths] # Convert all relative paths to absolute
         with open(config_file_path_info, "w") as file: 
@@ -62,11 +52,11 @@ def save_profile(game, profile, paths, data_path, overwrite):
             with open(config_file_path_info, "r") as file:
                 paths = json.load(file)
         except:
-            raise ValueError(f"The path file ({config_file_path_info}) does not contain valid JSON")
+            raise DataError(f"The path file ({config_file_path_info}) does not contain valid JSON")
 
         # Check if file contains an empty list
         if not paths or not isinstance(paths, list):
-            raise ValueError(f"No saved paths were found at {config_file_path_info}")
+            raise DataError(f"No saved paths were found at {config_file_path_info}")
             
     # Check the directory where saved profiles are stored and copy the games config files to it
     profile_path = f"{data_path}/saved_profiles/{game}/{profile}/"
@@ -85,5 +75,5 @@ def load_profile(game, profile, data_path):
         saved_path = f"{data_path}/saved_profiles/{game}/{profile}/{hash_path(path)}"
         # Check if saved file exists
         if not os.path.exists(saved_path):
-            raise FileNotFoundError(f"Saved path: '{saved_path}' not found.")
+            raise PathError(f"Saved path: '{saved_path}' not found.")
         shutil.copy(saved_path, path)
