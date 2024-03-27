@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    poetry2nix.url = "github:nix-community/poetry2nix";
   };
 
   outputs = { self, nixpkgs, flake-utils, poetry2nix, ... }:
@@ -12,21 +13,29 @@
         pkgs = import nixpkgs {
           inherit system;
         };
+        poetryEnv = pkgs.poetry2nix.mkPoetryApplication {
+          projectDir = ./.;
+        };
       in
       {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
-            python3
             poetry
             python3Packages.pytest
+            poetryEnv
           ];
 
           shellHook = ''
-	          poetry install
-	          source "$(poetry env info --path)/bin/activate"
+            poetry install
+            source "$(poetry env info --path)/bin/activate"
           '';
+        };
+        packages.default = poetryEnv;
+        defaultPackage = poetryEnv;
+        apps.default = {
+          type = "app";
+          program = "${poetryEnv}/bin/gsm-cli";
         };
       }
     );
 }
-

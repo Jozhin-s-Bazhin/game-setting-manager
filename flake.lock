@@ -105,8 +105,9 @@
         "type": "github"
       },
       "original": {
-        "id": "poetry2nix",
-        "type": "indirect"
+        "owner": "nix-community",
+        "repo": "poetry2nix",
+        "type": "github"
       }
     },
     "root": {
