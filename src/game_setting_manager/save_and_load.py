@@ -7,6 +7,17 @@ import hashlib
 
 DEFAULT_DATA_PATH = os.path.join(os.path.expanduser("~"), ".game_setting_manager")
 
+# Define custom errors
+class PathError(BaseException):
+    """Exception raised when something goes wrong with the 'paths' variable in 'save_profile' or 'load_profile'"""
+    def __init__(self, message):
+        self.message = message
+        
+class DataError(BaseException):
+    """Exception raised when something goes wrong with the data directory"""
+    def __init__(self, message):
+        self.message = message
+
 def hash_path(file_path):
     """Takes a string and returns a hash. Used here to hash file paths"""
     encoded_path = file_path.encode('utf-8')
