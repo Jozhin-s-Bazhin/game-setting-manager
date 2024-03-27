@@ -31,8 +31,8 @@
           '';
         };
         packages = {
-          game-setting-manager = mkPoetryApplication { projectDir = self; };
-          default = self.packages.${system}.game-setting-manager;
+          gsm-cli = mkPoetryApplication { projectDir = self; };
+          default = self.packages.${system}.gsm-cli;
         };        
       }
     );
