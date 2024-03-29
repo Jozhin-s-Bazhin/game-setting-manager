@@ -26,9 +26,19 @@ parser_load.add_argument('--data-path', help='Path to saved data, mostly intende
 def main():
     args = parser.parse_args()
     if args.command == 'save':
-        save_and_load.save_profile(args.game_name, args.profile_name, args.path, args.data_path, args.overwrite_saved_profiles)
+        try:
+            save_and_load.save_profile(args.game_name, args.profile_name, args.path, args.data_path, args.overwrite_saved_profiles)
+        except save_and_load.PathError as e:
+            print(e.message)
+        except save_and_load.DataError as e:
+            print(e.message)
     elif args.command == 'load':
-        save_and_load.load_profile(args.game_name, args.profile_name, args.data_path)
+        try:
+            save_and_load.load_profile(args.game_name, args.profile_name, args.data_path)
+        except save_and_load.PathError as e:
+            print(e.message)
+        except save_and_load.DataError as e:
+            print(e.message)
     else:
         parser.print_help()
 
