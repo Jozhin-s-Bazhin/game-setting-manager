@@ -26,14 +26,14 @@ def hash_path(file_path):
 
 def save_profile(game, profile, paths, data_path):  
     """Saves all files specified in 'paths' or read from '<data_path>/game_paths/<game>.json' to '<data_path>/<game>/<profile>/'"""
-    config_file_path_info = f"{data_path}/game_paths/{game}.json"
+    config_file_path_info = os.path.join(data_path, "game_paths", f"{game}.json")
 
     # Check if there are any provided paths to game's files
     if (not os.path.exists(config_file_path_info) and not paths): 
         raise PathError(f"No saved paths were found at '{config_file_path_info}' and no paths were specified trough --path.")
 
     # Check and create file with path info an data directory
-    os.makedirs(f"{data_path}/game_paths/", exist_ok=True)  # This is where all the data about config paths is stored
+    os.makedirs(os.path.join(data_path, "game_paths"), exist_ok=True)  # This is where all the data about config paths is stored
     
     # Check if paths are specified, else try to find paths in data dir
     if paths:  
@@ -58,14 +58,14 @@ def save_profile(game, profile, paths, data_path):
             raise DataError(f"No saved paths were found at {config_file_path_info}")
             
     # Check the directory where saved profiles are stored and copy the games config files to it
-    profile_path = f"{data_path}/saved_profiles/{game}/{profile}/"
+    profile_path = os.path.join(data_path, "saved_profiles", game, profile)
     os.makedirs(profile_path, exist_ok=True)
     for path in paths:
-        shutil.copy(path, f"{profile_path}/{hash_path(path)}")
+        shutil.copy(path, os.path.join(profile_path, hash_path(path)))
 
 def load_profile(game, profile, data_path):  
     """Loads all files from '<data_path>/<game>/<profile>/' to the appropriate locations read from '<data_path>/game_paths/<game>.json"""
-    config_file_path_info = f"{data_path}/game_paths/{game}.json"  # Path to file containing a list of all configuration files of the game
+    config_file_path_info = os.path.join(data_path, "game_paths", f"{game}.json")  # Path to file containing a list of all configuration files of the game
 
     try:
         with open(config_file_path_info, "r") as file:
@@ -77,7 +77,7 @@ def load_profile(game, profile, data_path):
         raise DataError("The file containing paths to the game's configuration files does not contain a list or contains an empty list")
         
     for path in paths:
-        saved_path = f"{data_path}/saved_profiles/{game}/{profile}/{hash_path(path)}"
+        saved_path = os.path.join(data_path, "saved_profiles", game, profile, hash_path(path))
         # Check if saved file exists
         if not os.path.exists(saved_path):
             raise PathError(f"Saved path: '{saved_path}' not found.")

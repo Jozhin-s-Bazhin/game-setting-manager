@@ -1,6 +1,5 @@
 import pytest
 import testing_tools
-import os
 from save_and_load import save_profile, hash_path, PathError, DataError
 
 
