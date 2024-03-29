@@ -24,4 +24,4 @@ jobs:
         source "$(poetry env info --path)/bin/activate"
 
     - name: Run tests
-      run: poetry run pytest
+      run: pytest
