@@ -1,6 +1,6 @@
 import pytest
 import testing_tools
-from save_and_load import save_profile, load_profile, hash_path, PathError, DataError
+from game_setting_manager.save_and_load import save_profile, load_profile, hash_path, PathError, DataError
 
 
 def test_load(tmp_path):

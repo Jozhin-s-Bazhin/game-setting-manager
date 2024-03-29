@@ -1,6 +1,6 @@
 import pytest
 import testing_tools
-from save_and_load import save_profile, hash_path, PathError, DataError
+from game_setting_manager.save_and_load import save_profile, hash_path, PathError, DataError
 
 
 # Tests that should work
