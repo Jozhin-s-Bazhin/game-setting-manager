@@ -9,7 +9,6 @@ packages = [{include = "game_setting_manager", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pytest = "^6.2.5"
 
 [tool.poetry.scripts]
 gsm-cli = 'game_setting_manager.gsm_cli:main'
