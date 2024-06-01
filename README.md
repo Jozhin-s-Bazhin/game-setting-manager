@@ -1,5 +1,5 @@
 # game-setting-manager
-An overengeneered cli and tui utility to save and restore setting profiles for games. 
+A cli utility to save and restore setting profiles for games. 
 
 ## Installation for dev environment
 ### Prerequisites
